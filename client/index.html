@@ -2,194 +2,56 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Đặt Lịch Workshop Nghệ Thuật</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quản Lý Art Workshop</title>
+    <!-- CSS Bootstrap 5 chung cho cả nhóm -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-light container py-4">
+<body class="bg-light">
 
-    <h2 class="mb-4">Khám phá & Đặt lịch Workshop</h2>
-
-    <!-- Thanh Lọc & Tìm Kiếm -->
-    <div class="card card-body mb-4 shadow-sm">
-        <div class="row g-3">
-            <div class="col-md-4">
-                <input type="text" id="searchInput" class="form-control" placeholder="Từ khóa tìm kiếm...">
-            </div>
-            <div class="col-md-3">
-                <select id="categorySelect" class="form-select">
-                    <option value="">-- Tất cả danh mục --</option>
-                    <option value="Nến thơm">Nến thơm</option>
-                    <option value="Hội họa">Hội họa</option>
-                    <option value="Gốm">Gốm</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <input type="text" id="locationInput" class="form-control" placeholder="Địa điểm (TP.HCM, Hà Nội...)">
-            </div>
-            <div class="col-md-2">
-                <button onclick="fetchWorkshops()" class="btn btn-primary w-100">Lọc kết quả</button>
+    <!-- 1. KHUNG NAVBAR CHUNG -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">🎨 Art Workshop</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-ul navbar-nav ms-auto">
+                    <!-- Phân hệ 2: Nam Anh -->
+                    <li class="nav-item"><a class="nav-link" href="#workshops">Workshop & Địa điểm</a></li>
+                    <!-- Phân hệ 3: Thu Phương -->
+                    <li class="nav-item"><a class="nav-link" href="#booking">Đặt lịch</a></li>
+                    <!-- Phân hệ 4: Mỹ Phương -->
+                    <li class="nav-item"><a class="nav-link" href="#payment">Thanh toán</a></li>
+                    <!-- Phân hệ 1: Nhung -->
+                    <li class="nav-item"><a class="nav-link btn btn-outline-light btn-sm ms-2 px-3" href="#login">Tài khoản</a></li>
+                </ul>
             </div>
         </div>
-    </div>
+    </nav>
 
-    <!-- Danh sách Workshop -->
-    <div id="workshopList" class="row row-cols-1 row-cols-md-3 g-4"></div>
-
-    <!-- Modal Chi Tiết & Đặt Lịch -->
-    <div class="modal fade" id="bookingModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle">Chi tiết Workshop</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p id="modalDesc"></p>
-                    <h6 class="text-danger" id="modalPrice"></h6>
-                    <hr>
-                    <form id="bookingForm" onsubmit="submitBooking(event)">
-                        <input type="hidden" id="selectedWsId">
-                        
-                        <div class="mb-3">
-                            <label class="form-label font-weight-bold">Chọn ca/khung giờ:</label>
-                            <select id="scheduleSelect" class="form-select" onchange="checkSlots()" required>
-                                <option value="">-- Chọn lịch --</option>
-                            </select>
-                        </div>
-
-                        <div id="slotAlert" class="mb-3"></div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Số người tham gia:</label>
-                            <input type="number" id="quantityInput" class="form-control" min="1" value="1" required disabled>
-                        </div>
-
-                        <div class="mb-3">
-                            <input type="text" id="custName" class="form-control mb-2" placeholder="Họ và tên" required>
-                            <input type="email" id="custEmail" class="form-control mb-2" placeholder="Email" required>
-                            <input type="tel" id="custPhone" class="form-control" placeholder="Số điện thoại" required>
-                        </div>
-
-                        <button type="submit" id="submitBtn" class="btn btn-success w-100" disabled>Xác nhận Đặt chỗ</button>
-                    </form>
-                </div>
+    <!-- 2. VÙNG CHỨA NỘI DUNG DÙNG CHUNG (Khu vực các bạn tự đổ giao diện vào) -->
+    <main class="container py-4">
+        <div id="main-content">
+            <div class="text-center py-5">
+                <h2 class="text-muted">Chào mừng đến với Hệ thống Quản lý Art Workshop</h2>
+                <p>Vui lòng chọn các tính năng trên thanh menu.</p>
             </div>
         </div>
-    </div>
+    </main>
 
+    <!-- 3. FOOTER CHUNG -->
+    <footer class="bg-white border-top text-center py-3 text-muted">
+        <small>&copy; 2026 Art Workshop Management System. All rights reserved.</small>
+    </footer>
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Script dùng chung -->
     <script>
-        const API = 'http://localhost:5000/api';
-        let modalInstance;
-
-        // 1. Tải danh sách & Lọc Workshop
-        async function fetchWorkshops() {
-            const search = document.getElementById('searchInput').value;
-            const category = document.getElementById('categorySelect').value;
-            const location = document.getElementById('locationInput').value;
-            
-            const params = new URLSearchParams({ search, category, location });
-            const res = await fetch(`${API}/workshops?${params}`);
-            const data = await res.json();
-
-            const list = document.getElementById('workshopList');
-            list.innerHTML = '';
-            
-            data.forEach(ws => {
-                list.innerHTML += `
-                    <div class="col">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <span class="badge bg-secondary mb-2">${ws.category}</span>
-                                <h5>${ws.title}</h5>
-                                <p class="text-muted small">${ws.location}</p>
-                                <h6 class="text-danger fw-bold">${Number(ws.price).toLocaleString()} VNĐ</h6>
-                            </div>
-                            <div class="card-footer bg-white border-top-0">
-                                <button class="btn btn-outline-primary w-100" onclick="openDetail(${ws.id})">Xem chi tiết & Đặt vé</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // 2. Mở Modal Chi Tiết & Tải Lịch học
-        async function openDetail(id) {
-            const res = await fetch(`${API}/workshops/${id}`);
-            const data = await res.json();
-
-            document.getElementById('modalTitle').innerText = data.workshop.title;
-            document.getElementById('modalDesc').innerText = data.workshop.description;
-            document.getElementById('modalPrice').innerText = `Giá: ${Number(data.workshop.price).toLocaleString()} VNĐ/người`;
-            
-            const select = document.getElementById('scheduleSelect');
-            select.innerHTML = '<option value="">-- Chọn lịch --</option>';
-            data.schedules.forEach(s => {
-                select.innerHTML += `<option value="${s.id}">Ngày ${s.work_date.substring(0,10)} lúc ${s.start_time}</option>`;
-            });
-
-            document.getElementById('slotAlert').innerHTML = '';
-            document.getElementById('quantityInput').disabled = true;
-            document.getElementById('submitBtn').disabled = true;
-
-            modalInstance = new bootstrap.Modal(document.getElementById('bookingModal'));
-            modalInstance.show();
-        }
-
-        // 3. Kiểm tra số chỗ còn trống (Real-time)
-        async function checkSlots() {
-            const scId = document.getElementById('scheduleSelect').value;
-            const alertDiv = document.getElementById('slotAlert');
-            const qtyInput = document.getElementById('quantityInput');
-            const btn = document.getElementById('submitBtn');
-
-            if (!scId) return;
-
-            const res = await fetch(`${API}/schedules/${scId}/availability`);
-            const data = await res.json();
-
-            if (data.available_slots > 0) {
-                alertDiv.innerHTML = `<div class="alert alert-info py-2">Còn lại <strong>${data.available_slots} chỗ trống</strong></div>`;
-                qtyInput.disabled = false;
-                qtyInput.max = data.available_slots;
-                btn.disabled = false;
-            } else {
-                alertDiv.innerHTML = `<div class="alert alert-danger py-2">Suất học này đã <strong>HẾT CHỖ</strong>!</div>`;
-                qtyInput.disabled = true;
-                btn.disabled = true;
-            }
-        }
-
-        // 4. Gửi đơn đặt vé
-        async function submitBooking(e) {
-            e.preventDefault();
-            const body = {
-                schedule_id: document.getElementById('scheduleSelect').value,
-                quantity: document.getElementById('quantityInput').value,
-                customer_name: document.getElementById('custName').value,
-                customer_email: document.getElementById('custEmail').value,
-                customer_phone: document.getElementById('custPhone').value
-            };
-
-            const res = await fetch(`${API}/bookings`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
-            });
-            const result = await res.json();
-
-            if (result.success) {
-                alert(`Đặt vé thành công! Tổng tiền: ${Number(result.total_price).toLocaleString()} VNĐ`);
-                modalInstance.hide();
-                fetchWorkshops();
-            } else {
-                alert(`Lỗi: ${result.message}`);
-            }
-        }
-
-        // Chạy lần đầu khi mở web
-        fetchWorkshops();
+        const API_URL = 'http://localhost:5000/api';
+        console.log('App Loaded - Ready for 4 modules');
     </script>
 </body>
 </html>
