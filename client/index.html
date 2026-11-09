@@ -3,55 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Quản Lý Art Workshop</title>
-    <!-- CSS Bootstrap 5 chung cho cả nhóm -->
+    <title>Art Workshop - Management and Booking</title>
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-orange: #c86537;
+            --primary-orange-hover: #b25529;
+            --bg-light: #fafafa;
+        }
 
-    <!-- 1. KHUNG NAVBAR CHUNG -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Header */
+        .navbar {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-orange) !important;
+            font-size: 1.4rem;
+        }
+
+        .nav-link {
+            color: #333333 !important;
+            font-weight: 500;
+            margin: 0 10px;
+        }
+
+        .nav-link.active {
+            font-weight: 700;
+        }
+
+        .btn-outline-custom {
+            border: 1px solid #333333;
+            color: #333333;
+            border-radius: 8px;
+            padding: 6px 20px;
+            font-weight: 500;
+        }
+
+        .btn-outline-custom:hover {
+            background-color: #f0f0f0;
+            color: #333333;
+        }
+
+        .btn-orange-custom {
+            background-color: var(--primary-orange);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 20px;
+            font-weight: 500;
+        }
+
+        .btn-orange-custom:hover {
+            background-color: var(--primary-orange-hover);
+            color: white;
+        }
+
+        /* Hero Banner Section */
+        .hero-banner {
+            position: relative;
+            /* LƯU Ý: Thay đường dẫn ảnh của bạn vào url() bên dưới khi có ảnh */
+            background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), 
+                        url('https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 90px 20px;
+            text-align: center;
+        }
+
+        .hero-banner h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .hero-banner p {
+            font-size: 1.1rem;
+            font-weight: 400;
+            opacity: 0.95;
+            margin-bottom: 0;
+        }
+
+        /* Main Content Container (Để trống sẵn) */
+        main#main-content {
+            flex: 1;
+            padding: 40px 0;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid #eaeaea;
+            background-color: #ffffff;
+            padding: 20px 0;
+            color: #333333;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. HEADER / NAVBAR -->
+    <nav class="navbar navbar-expand-lg bg-white sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">🎨 Art Workshop</a>
+            <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+                <i class="fa-solid fa-palette"></i> Art Workshop
+            </a>
+            
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-ul navbar-nav ms-auto">
-                    <!-- Phân hệ 2: Nam Anh -->
-                    <li class="nav-item"><a class="nav-link" href="#workshops">Workshop & Địa điểm</a></li>
-                    <!-- Phân hệ 3: Thu Phương -->
-                    <li class="nav-item"><a class="nav-link" href="#booking">Đặt lịch</a></li>
-                    <!-- Phân hệ 4: Mỹ Phương -->
-                    <li class="nav-item"><a class="nav-link" href="#payment">Thanh toán</a></li>
-                    <!-- Phân hệ 1: Nhung -->
-                    <li class="nav-item"><a class="nav-link btn btn-outline-light btn-sm ms-2 px-3" href="#login">Tài khoản</a></li>
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Danh sách Workshop</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Đặt lịch</a>
+                    </li>
                 </ul>
+
+                <div class="d-flex align-items-center gap-2">
+                    <button class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng nhập</button>
+                    <button class="btn btn-orange-custom">Đăng ký</button>
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- 2. VÙNG CHỨA NỘI DUNG DÙNG CHUNG (Khu vực các bạn tự đổ giao diện vào) -->
-    <main class="container py-4">
-        <div id="main-content">
-            <div class="text-center py-5">
-                <h2 class="text-muted">Chào mừng đến với Hệ thống Quản lý Art Workshop</h2>
-                <p>Vui lòng chọn các tính năng trên thanh menu.</p>
-            </div>
+    <!-- 2. HERO BANNER -->
+    <header class="hero-banner">
+        <div class="container">
+            <h1>Khám Phá Sáng Tạo Nghệ Thuật</h1>
+            <p>Tham gia các lớp workshop Làm gốm, Vẽ tranh, Nến thơm & Đồ thủ công cùng nghệ nhân</p>
+        </div>
+    </header>
+
+    <!-- 3. KHU VỰC NỘI DUNG CHÍNH (Đang để trống để nhúng code sau) -->
+    <main id="main-content">
+        <div class="container text-center text-muted">
+            <!-- Nội dung từng phân hệ sẽ được đổ vào đây khi bấm menu -->
         </div>
     </main>
 
-    <!-- 3. FOOTER CHUNG -->
-    <footer class="bg-white border-top text-center py-3 text-muted">
-        <small>&copy; 2026 Art Workshop Management System. All rights reserved.</small>
+    <!-- 4. FOOTER -->
+    <footer class="text-center">
+        <div class="container">
+            Art Workshop Management and Booking
+        </div>
     </footer>
 
-    <!-- Bootstrap JS -->
+    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Script dùng chung -->
-    <script>
-        const API_URL = 'http://localhost:5000/api';
-        console.log('App Loaded - Ready for 4 modules');
-    </script>
 </body>
 </html>
